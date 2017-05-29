@@ -3,6 +3,9 @@
 ################################################################################
 
 /Arduino/.vs/MiniRBoard/v15
+<<<<<<< HEAD
+/lib
+=======
 /Arduino/MiniRBoard/Debug
 /Arduino/MiniRBoard/__vm/Compile.vmps.xml
 /Arduino/MiniRBoard/__vm
@@ -19,3 +22,4 @@
 /Arduino/MiniRBoard/Debug/MiniRBoard.cpp.d
 /Arduino/MiniRBoard/Debug/core.a
 /Arduino/MiniRBoard/Debug/board.buildinfo
+>>>>>>> 4e021890bd1af74fca64da4d991d3f310fe4bc10
