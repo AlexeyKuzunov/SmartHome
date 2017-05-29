@@ -3,7 +3,7 @@ PREFIX=/usr/local/
 LIB=librf24-sun7i
 LIBNAME=$(LIB).so.1.0
 OBJDIR=obj/
-LIBDIR=lib/
+LIBDIR=./lib/
 
 CCFLAGS=-g -Ofast -mfpu=vfp -mfloat-abi=hard
 
@@ -22,10 +22,10 @@ ${OBJDIR}RF24.o:src/RF24.cpp
 	g++ -Wall -fPIC ${CCFLAGS} -c $^ -o $@
 
 server:
-	g++ main.cpp -g -I./src/ -L${LIBDIR} -lrf24-sun7i -o server -Wno-write-strings
+	g++ main.cpp -g -I../src/ -L${LIBDIR} -lrf24-sun7i -o server -Wno-write-strings
 
 test:
-	g++ test.cpp -g -I./src/ -L${LIBDIR} -lrf24-sun7i -o test -Wno-write-strings
+	g++ test.cpp -g -I../src/ -L${LIBDIR} -lrf24-sun7i -o test -Wno-write-strings
 
 
 clean:
