@@ -3,3 +3,19 @@
 ################################################################################
 
 /Arduino/.vs/MiniRBoard/v15
+/Arduino/MiniRBoard/Debug
+/Arduino/MiniRBoard/__vm/Compile.vmps.xml
+/Arduino/MiniRBoard/__vm
+/Arduino/MiniRBoard/__vm/Upload.vmps.xml
+/Arduino/MiniRBoard/__vm/Configuration.Debug.vmps.xml
+/Arduino/MiniRBoard/__vm/Compile.vmps.xml
+/Arduino/MiniRBoard/Debug/MiniRBoard.with_bootloader.hex
+/Arduino/MiniRBoard/Debug/MiniRBoard.ino.with_bootloader.hex
+/Arduino/MiniRBoard/Debug/MiniRBoard.ino.hex
+/Arduino/MiniRBoard/Debug/MiniRBoard.ino.elf
+/Arduino/MiniRBoard/Debug/MiniRBoard.hex
+/Arduino/MiniRBoard/Debug/MiniRBoard.elf
+/Arduino/MiniRBoard/Debug/MiniRBoard.cpp.o
+/Arduino/MiniRBoard/Debug/MiniRBoard.cpp.d
+/Arduino/MiniRBoard/Debug/core.a
+/Arduino/MiniRBoard/Debug/board.buildinfo
