@@ -11,8 +11,9 @@ d:\tmp\VMBuilds\MiniRBoard\diecimila_atmega328\Debug\MiniRBoard.cpp.o: \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/USBAPI.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\variants\standard/pins_arduino.h \
- D:\Hobby\Arduino\libraries\RF24/RF24_config.h \
+ D:\Hobby\Arduino\libraries\OneWire/OneWire.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\cores\arduino/Arduino.h \
+ D:\Hobby\Arduino\libraries\RF24/RF24_config.h \
  C:\Program\ Files\ (x86)\Arduino\hardware\arduino\avr\libraries\SPI\src/SPI.h \
  D:\Hobby\Arduino\libraries\RF24/RF24.h \
  D:\Hobby\Arduino\libraries\RF24/RF24_config.h \
