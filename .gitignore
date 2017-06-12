@@ -2,6 +2,6 @@
 # Данный GITIGNORE-файл был автоматически создан Microsoft(R) Visual Studio.
 ################################################################################
 
-/Arduino/.vs/MiniRBoard/v15/*
-/Arduino/MiniRBoard/Debug/*
-/Arduino/MiniRBoard/__vm/*
+/Arduino/.vs/MiniRBoard/v15/
+/Arduino/MiniRBoard/Debug/
+/Arduino/MiniRBoard/__vm/

@@ -5,6 +5,7 @@ Created:	27.05.2017 22:08:56
 */
 
 // the setup function runs once when you press reset or power the board
+#include <RF24_config.h>
 #include <OneWire.h>
 #include <RF24_config.h>
 #include <RF24.h>
@@ -12,10 +13,9 @@ Created:	27.05.2017 22:08:56
 #include <nRF24L01.h>
 #include "ASLibrary.h"
 
-#define timeoutper 400 // таймаут запросов от сервера.
-#define NumSensors 2
-
-AS_Command command;
+#define TIMEOUT 400 // таймаут запросов от сервера.
+#define NUMSENSORS 2	//
+#define IDCLIENT 1	// номер клиента 1...
 
 OneWire ds(3);
 
@@ -28,7 +28,8 @@ volatile boolean flag_tx, flag_fail, flag_rx;
 unsigned long errorstate = 0;
 int Relay = 4;
 boolean stateRelay = LOW;
-AS_SensorStatus MySensors[NumSensors] = {
+
+AS_SensorStatus MySensors[NUMSENSORS] = {
 	0,0,"18B20_temp(C)",
 	0,0,"Swith" };
 
@@ -69,6 +70,7 @@ void check_radio() { // обработчик прерывания
 	flag_tx = tx; // 1 если успешно отправили данные
 	flag_fail = fail; // 1 если данные не отправленны   
 	flag_rx = rx;  // 1 если пришли данные для чтения 
+	//Serial.println(rx);
 }
 
 AS_Answer ExecuteCommand(AS_Command MyCommand) {
@@ -76,37 +78,39 @@ AS_Answer ExecuteCommand(AS_Command MyCommand) {
 	MyAnswer.Status = 0;
 	MyAnswer.Value = 0;
 	if (id == MyCommand.id) {
+		MyAnswer.Id = IDCLIENT;
 		switch (MyCommand.Command) {
 		case 1: //Получить количество датчиков
 			MyAnswer.Status = 1;
-			MyAnswer.Value = NumSensors;
-			MyAnswer.count = errorstate;
+			MyAnswer.Value = NUMSENSORS;
+			MyAnswer.Count = errorstate;
+			memcpy(&MyAnswer.Comment, &"Sun sensors.", COMMENTLEN);
 			//Serial.println("1.");
 			break;
 		case 2: //Рассчитать все значения датчиков
 			MyAnswer.Status = CalculateAllData();
-			MyAnswer.count = errorstate;
+			MyAnswer.Count = errorstate;
 			///Serial.println("2.");
 			break;
 		case 3:
 			Switch();
 			MyAnswer.Status = 1;
 			MyAnswer.Value = stateRelay;
-			MyAnswer.count = errorstate;
+			MyAnswer.Count = errorstate;
 			break;
 		case 4: //Получиь значение датчика по номеру
 				//Serial.println("4.");
-			if ((MyCommand.Parametr + 1) > NumSensors) {
+			if ((MyCommand.Parametr + 1) > NUMSENSORS) {
 				MyAnswer.Status = 0;
 				MyAnswer.Value = 0;
-				MyAnswer.count = errorstate;
-				memcpy(&MyAnswer.Comment, &"Too big num par.", CommentLen);
+				MyAnswer.Count = errorstate;
+				memcpy(&MyAnswer.Comment, &"Too big num par.", COMMENTLEN);
 			}
 			else {
 				MyAnswer.Status = MySensors[MyCommand.Parametr].Status;
 				MyAnswer.Value = MySensors[MyCommand.Parametr].Value;
-				MyAnswer.count = errorstate;
-				memcpy(&MyAnswer.Comment, &MySensors[MyCommand.Parametr].Comment, CommentLen);
+				MyAnswer.Count = errorstate;
+				memcpy(&MyAnswer.Comment, &MySensors[MyCommand.Parametr].Comment, COMMENTLEN);
 				//MyAnswer.Comment[0] = P[0];
 			}
 			break;
@@ -123,7 +127,7 @@ void setup() {
 	// Разрешение отправки нетипового ответа передатчику;
 	//radio.enableAckPayload();
 	// enable dynamic payloads
-	radio.enableDynamicPayloads();
+	//radio.enableDynamicPayloads();
 	// optionally, increase the delay between retries & # of retries
 	//radio.setRetries(15, 15);
 	radio.setDataRate(RF24_DATARATE);
@@ -137,20 +141,45 @@ void setup() {
 	// Start listening
 	radio.startListening();
 	// Dump the configuration of the rf unit for debugging
-	radio.printDetails();
+	//radio.printDetails();
 	attachInterrupt(0, check_radio, FALLING);
 }
 
 // the loop function runs over and over again until power down or reset
 void loop() {
 	AS_Answer MyAnswer;
-	CalculateAllData();
+	AS_Command MyCommand;
+//	CalculateAllData();
 	if (flag_rx) { // если пришли данные для чтения
-		radio.read(&command, sizeof(command));
-		MyAnswer = ExecuteCommand(command);
-		radio.stopListening();
+		radio.read(&MyCommand, sizeof(MyCommand));
+		
+		Serial.print("id: ");
+		Serial.println(MyCommand.Id);
+		Serial.print("Command: ");
+		Serial.println(MyCommand.Command);
+		Serial.print("Parametr: ");
+		Serial.println(MyCommand.Parametr);
+
+/*		MyAnswer = ExecuteCommand(command);
+		
+		Serial.print("id: ");
+		Serial.println(MyAnswer.Id);
+		Serial.print("Status: ");
+		Serial.println(MyAnswer.Status);
+		Serial.print("Count: ");
+		Serial.println(MyAnswer.Count);
+		Serial.print("Value: ");
+		Serial.println(MyAnswer.Value);
+		Serial.print("Comment: ");
+		Serial.println(MyAnswer.Comment);
+		Serial.print("Sizeof_Answer: ");
+		Serial.println(sizeof(MyAnswer));
+		
+		radio.stopListening();		
 		radio.write(&MyAnswer, sizeof(MyAnswer));
 		radio.startListening();
+*/
+
 		flag_rx = 0;
 		//Serial.println(command.id);
 	}
