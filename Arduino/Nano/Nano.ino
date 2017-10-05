@@ -36,7 +36,7 @@
 
 // Определяем рабочие ножки;
 RF24 radio(9, 10);
-const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0E2LL };
+const uint64_t pipes[2] = { 0xF0F0F0F0E2LL, 0xF0F0F0F0E1LL };
 
 
 void setup() {
@@ -91,7 +91,7 @@ void loop() {
 
 void NRF24_Init() {
 	radio.begin();
-	radio.setAutoAck(false);
+	radio.setAutoAck(AUTOACK);
 	// Разрешение отправки нетипового ответа передатчику;
 	//radio.enableAckPayload();
 	// enable dynamic payloads
