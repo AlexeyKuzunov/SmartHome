@@ -12,9 +12,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C5F80730-F44F-4478-BDAE-6634EFC2CA88}</ProjectGuid>
-    <RootNamespace>MiniRBoard</RootNamespace>
-    <ProjectName>MiniRBoard</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <RootNamespace>Nano</RootNamespace>
+    <ProjectName>Nano</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -22,7 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>
     </PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -48,10 +47,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\..\Arduino\libraries\RF24-maniacbug;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\libraries\SPI\src;$(ProjectDir)..\..\..\..\..\Arduino\libraries\OneWire;$(ProjectDir)..\..\..\..\..\..\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\..\..\..\..\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\variants\standard;$(ProjectDir)..\MiniRBoard;$(ProjectDir)..\..\src;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\avr\include\;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\avr\include\avr\;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <ForcedIncludeFiles>$(ProjectDir)__vm\.MiniRBoard.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Nano;$(ProjectDir)..\..\..\..\..\Arduino\libraries\RF24-maniacbug;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\libraries\SPI\src;$(ProjectDir)..\..\..\..\..\Arduino\libraries\DHT_sensor_library;$(ProjectDir)..\..\..\..\..\Arduino\libraries\Adafruit_Sensor-master;$(ProjectDir)..\..\..\..\..\..\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\libraries;$(ProjectDir)..\..\..\..\..\Arduino\libraries;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\cores\arduino;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\arduino\avr\variants\eightanaloginputs;$(ProjectDir)..\..\src;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\avr\include\;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\avr\include\avr\;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.8.1\include;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.2\include;$(ProjectDir)..\..\..\..\..\..\Arduino\hardware\tools\avr\lib\gcc\avr\4.9.3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>$(ProjectDir)__vm\.Nano.vsarduino.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
-      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=10802;ARDUINO_AVR_DUEMILANOVE;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>__AVR_ATmega328p__;__AVR_ATmega328P__;F_CPU=16000000L;ARDUINO=10803;ARDUINO_AVR_NANO;ARDUINO_ARCH_AVR;__cplusplus=201103L;_VMICRO_INTELLISENSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -78,23 +77,15 @@
     <DebuggerFlavor>VisualMicroDebugger</DebuggerFlavor>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="MiniRBoard.ino">
+    <None Include="Nano.ino">
       <FileType>CppCode</FileType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\ASLibrary.h" />
-    <ClInclude Include="__vm\.MiniRBoard.vsarduino.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="board.txt" />
+    <ClInclude Include="__vm\.Nano.vsarduino.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties debug.local.portname="COM3" debug.view.AnalogPins="" debug.view.DigitalPins="" debug.local.portspeed="57600" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

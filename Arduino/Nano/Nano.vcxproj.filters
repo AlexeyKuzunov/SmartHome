@@ -15,17 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="MiniRBoard.ino" />
+    <None Include="Nano.ino" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="__vm\.MiniRBoard.vsarduino.h">
+    <ClInclude Include="__vm\.Nano.vsarduino.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ASLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="board.txt" />
   </ItemGroup>
 </Project>
