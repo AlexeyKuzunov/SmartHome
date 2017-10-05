@@ -91,13 +91,13 @@ void loop() {
 
 void NRF24_Init() {
 	radio.begin();
-	radio.setAutoAck(AUTOACK);
+	radio.setAutoAck(RF24_AUTOACK);
 	// Разрешение отправки нетипового ответа передатчику;
 	//radio.enableAckPayload();
 	// enable dynamic payloads
 	//radio.enableDynamicPayloads();
 	// optionally, increase the delay between retries & # of retries
-	//radio.setRetries(15, 15);
+	radio.setRetries(15, 15);
 	radio.setDataRate(RF24_DATARATE);
 	radio.setChannel(RF24_CHANNEL);
 	radio.setPALevel(RF24_PA_LEVEL);

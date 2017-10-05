@@ -5,3 +5,6 @@
 /Arduino/.vs/MiniRBoard/v15/*
 /Arduino/MiniRBoard/Debug/*
 /Arduino/MiniRBoard/__vm/*
+/Arduino/.vs/Nano/v15/*
+/Arduino/Nano/Debug/*
+/Arduino/Nano/__vm/*
