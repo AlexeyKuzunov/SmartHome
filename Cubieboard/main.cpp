@@ -19,24 +19,25 @@ void init_nrf(void)
 
 	radio.begin(); //старт работы
 	// enable dynamic payloads
-	radio.enableAckPayload(); //Разрешение отправки нетипового ответа передатчику
-	radio.enableDynamicPayloads();
-	radio.setAutoAck(1); //Установка режима подтверждения приема
+//	radio.enableAckPayload(); //Разрешение отправки нетипового ответа передатчику
+//	radio.enableDynamicPayloads();
+	radio.setAutoAck(RF24_AUTOACK); //Установка режима подтверждения приема
 	radio.setRetries(15, 15); //Установка интервала и количества попыток "дозвона" до приемника
-	radio.setDataRate(RF24_2MBPS); //Установка минимальной скорости
-	radio.setPALevel(RF24_PA_HIGH); //Установка максимальной мощности
-	radio.setChannel(50); //Установка канала вещания
+	radio.setDataRate(RF24_DATARATE); //Установка минимальной скорости
+	radio.setPALevel(RF24_PA_LEVEL); //Установка максимальной мощности
+	radio.setChannel(RF24_CHANNEL); //Установка канала вещания
 	radio.setCRCLength(RF24_CRC_16);
 	// Open pipes to other nodes for communication
 	// Open pipe for reading
-	radio.openReadingPipe(0, pipes[0]);
+	radio.openWritingPipe(pipes[0]);
 	radio.openReadingPipe(1, pipes[1]);
 	
 	//mkdir(DIR_PIPES, 0775);
 	// Start listening
 	//radio.startListening();
+	radio.stopListening();
 	// Dump the configuration of the rf unit for debugging
-	//radio.printDetails();
+	radio.printDetails();
 }
 
 bool set_command(AS_Command SetCommand) //отправляем команду на клиент
@@ -65,17 +66,20 @@ int main(int argc, char** argv)
 	AS_Command MyCommand;
 	AS_Answer MyAnswer ;
 
-	MyCommand.id = 1;
+	MyCommand.Id = 1;
 	MyCommand.Command = 4;
 	MyCommand.Parametr = 0;
 
 	init_nrf();
-	
+	if (set_command(MyCommand)) printf("Packet sending ++++++\n\r");
+	else printf("Packet NOT sending -------------\n\r");
+
+	/*
 	if (set_command(MyCommand)) 
 	{
 		get_answer(MyAnswer);
 		printf("[%d]/\n", MyAnswer.Value);
 	}
-
+	*/
 	return 0;
 }
