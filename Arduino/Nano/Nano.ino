@@ -49,10 +49,13 @@ void setup() {
 
 void loop() {
 	AS_Command MyCommand;
-	
-	while (radio.available()) {
-		//while (!done) {                            // Упираемся и
-		radio.read(&MyCommand, sizeof(MyCommand));  // по адресу переменной in функция записывает принятые данные;
+	bool done = false;
+	if (radio.available()) {
+		//while (!done) {
+		// Упираемся и
+		while (!done) {
+			done = radio.read(&MyCommand, sizeof(MyCommand));  // по адресу переменной in функция записывает принятые данные;
+		}
 		Serial.println(MyCommand.Id);
 	}
 	
