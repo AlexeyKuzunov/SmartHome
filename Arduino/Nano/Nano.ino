@@ -36,7 +36,7 @@
 
 // Определяем рабочие ножки;
 RF24 radio(9, 10);
-const uint64_t pipes[2] = { 0xF0F0F0F0E2LL, 0xF0F0F0F0E1LL };
+const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0E2LL };
 
 
 void setup() {
@@ -48,7 +48,13 @@ void setup() {
 }
 
 void loop() {
-
+	AS_Command MyCommand;
+	
+	while (radio.available()) {
+		//while (!done) {                            // Упираемся и
+		radio.read(&MyCommand, sizeof(MyCommand));  // по адресу переменной in функция записывает принятые данные;
+		Serial.println(MyCommand.Id);
+	}
 	
 	/*
 	// Wait a few seconds between measurements.
