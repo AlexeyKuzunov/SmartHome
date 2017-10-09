@@ -19,11 +19,18 @@
 // 3 N - Выполнить измерение по датчику N (записать в глобальные переменные, пока не принимать)
 // 4 N - Получить данные с датчика N (считать из глобальных переменных)
 
-typedef struct _AS_COMMAND {
-	unsigned char Id; //идентификатор клиента. Номер ячейки с адресом канала
-	unsigned char  Command; //Команда
-	unsigned char  Parametr; //Параметр
-} AS_Command;
+typedef struct _MESSAGE {
+	unsigned char	Id;				//идентификатор клиента. Номер ячейки с адресом канала
+	unsigned char	CommandTo;		// команда модулю номер ...
+	unsigned char	Command;		//Команда
+									// 0 - нет команды или ответ
+									// 1 - получить значение
+									// 2 - установить значение
+	unsigned char	ParamID;		// идентификатор параметра
+	float			ParamValue;		// значение параметра
+	boolean			Status;			// статус 0 - ошибка, 1 - ок
+	char			Comment[16];	// комментарий
+} Message;
 
 // Ответы состоят из 1 статуса и 1 значения
 // 0 x - Ошибка
@@ -42,11 +49,11 @@ typedef struct _AS_ANSWER {
 // 0 x - Ошибка
 // 1 N - Данные актуальны, значение N
 
-typedef struct _AS_SENSORSTATUS
+typedef struct _SENSORPARAM
 {
 	unsigned char	Status; //Статус
 	float	Value; //Значение
 	char	Comment[COMMENTLEN]; //Описание
-} AS_SensorStatus;
+} SensorParam;
 
 #endif // __ASLibrary__

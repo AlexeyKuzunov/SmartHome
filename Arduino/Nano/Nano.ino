@@ -34,6 +34,17 @@
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
 //DHT dht(DHTPIN, DHTTYPE);
 
+// описание параметров модуля
+#define SID 1                        // идентификатор датчика
+#define NumSensors 2                   // количество сенсоров (и еще одно обязательное занчение - имя датчика)
+
+SensorParam MySensors[NumSensors + 1] = {    // описание датчиков (и первичная инициализация)
+	NumSensors,1,"Sensor DHT22",        // в поле "комментарий" указываем пояснительную информацию о датчике и количество сенсоров, 1 в статусе означает "отвечаем на запросы"
+	0,0,"humidity",
+	0,0,"temperature"	
+};
+Message Sensor;
+
 // Определяем рабочие ножки;
 RF24 radio(9, 10);
 const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0E2LL };
@@ -48,15 +59,19 @@ void setup() {
 }
 
 void loop() {
-	AS_Command MyCommand;
 	bool done = false;
 	if (radio.available()) {
 		//while (!done) {
 		// Упираемся и
 		while (!done) {
-			done = radio.read(&MyCommand, sizeof(MyCommand));  // по адресу переменной in функция записывает принятые данные;
+			done = radio.read(&Sensor, sizeof(Sensor));  // по адресу переменной in функция записывает принятые данные;
+														 // если команда этому датчику - обрабатываем
+			if (Sensor.CommandTo == SID) {
+				// исполнить команду (от кого, команда, парметр, комментарий)
+				doCommand(Sensor.Id, Sensor.Command, Sensor.ParamID, Sensor.ParamValue, Sensor.Status, Sensor.Comment);
+			}
 		}
-		Serial.println(MyCommand.Id);
+	//	Serial.println(Sensor.Id);
 	}
 	
 	/*
@@ -104,7 +119,7 @@ void NRF24_Init() {
 	// Разрешение отправки нетипового ответа передатчику;
 	//radio.enableAckPayload();
 	// enable dynamic payloads
-	//radio.enableDynamicPayloads();
+	radio.enableDynamicPayloads();
 	// optionally, increase the delay between retries & # of retries
 	radio.setRetries(15, 15);
 	radio.setDataRate(RF24_DATARATE);
@@ -128,4 +143,35 @@ int serial_putc(char c, FILE *) {
 
 void printf_begin(void) {
 	fdevopen(&serial_putc, 0);
+}
+
+void doCommand(unsigned char From, unsigned char Command, unsigned char ParamID, 
+				float ParamValue, boolean Status, char* Comment) {
+	switch (Command) {
+	case 0:
+		// ничего не делаем 
+		break;
+	case 1:
+		// читаем и отправляем назад
+		sendSlaveMessage(From, ParamID);
+		break;
+	case 2:
+		// устанавливаем
+		setValue(From, ParamID, ParamValue, Comment);
+		break;
+	default:
+		break;
+	}
+	// ответим "командующему"
+	sendSlaveMessage(From, ParamID);
+
+	return;
+}
+
+void sendSlaveMessage(unsigned char From, unsigned char ParamID) {
+
+}
+
+void setValue(unsigned char From, unsigned char ParamID, float ParamValue, char* Comment) {
+
 }
