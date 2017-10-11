@@ -29,17 +29,6 @@ typedef struct _MESSAGE {
 	char		Comment[COMMENTLEN];	// комментарий
 } Message;
 
-
-//Ответ клиента
-typedef struct _AS_ANSWER {
-	unsigned char	Id;			//идентификатор
-	unsigned char	Status;			//Статус
-	unsigned long	Count;			// счетчик передач для контроля качества канала
-	float		Value;			//Значение
-	char		Comment[COMMENTLEN];	//Описание
-} AS_Answer;
-
-
 // Состояние датчиков
 typedef struct _SENSORPARAM
 {
