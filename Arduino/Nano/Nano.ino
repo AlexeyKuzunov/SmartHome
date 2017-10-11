@@ -14,7 +14,7 @@
 #include "ASLibrary.h"
 
 
-#define DHTPIN 2     // what digital pin we're connected to
+#define DHTPIN 3     // what digital pin we're connected to
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -32,7 +32,7 @@
 // Note that older versions of this library took an optional third parameter to
 // tweak the timings for faster processors.  This parameter is no longer needed
 // as the current DHT reading algorithm adjusts itself to work on faster procs.
-//DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHTPIN, DHTTYPE);
 
 // описание параметров модуля
 #define SID 1                        // идентификатор датчика
@@ -55,7 +55,7 @@ void setup() {
 	printf_begin();
 //	Serial.println("DHTxx test!");
 	NRF24_Init();
-//	dht.begin();
+	dht.begin();
 }
 
 void loop() {
@@ -74,7 +74,7 @@ void loop() {
 	//	Serial.println(Sensor.Id);
 	}
 	
-	/*
+	
 	// Wait a few seconds between measurements.
 	delay(2000);
 
@@ -110,7 +110,7 @@ void loop() {
 	Serial.print(" *C ");
 	Serial.print(hif);
 	Serial.println(" *F");
-*/
+
 }
 
 void NRF24_Init() {
@@ -169,7 +169,19 @@ void doCommand(unsigned char From, unsigned char Command, unsigned char ParamID,
 }
 
 void sendSlaveMessage(unsigned char From, unsigned char ParamID) {
+	AS_Answer Answer;
+	switch (ParamID)
+	{
+	case 1:
+		//Давление
 
+		break;
+	case 2:
+
+		break;
+	default:
+		break;
+	}
 }
 
 void setValue(unsigned char From, unsigned char ParamID, float ParamValue, char* Comment) {
