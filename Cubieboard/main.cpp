@@ -20,7 +20,7 @@ void init_nrf(void)
 	radio.begin(); //старт работы
 	// enable dynamic payloads
 //	radio.enableAckPayload(); //Разрешение отправки нетипового ответа передатчику
-//	radio.enableDynamicPayloads();
+	radio.enableDynamicPayloads();
 	radio.setAutoAck(RF24_AUTOACK); //Установка режима подтверждения приема
 	radio.setRetries(15, 15); //Установка интервала и количества попыток "дозвона" до приемника
 	radio.setDataRate(RF24_DATARATE); //Установка минимальной скорости
