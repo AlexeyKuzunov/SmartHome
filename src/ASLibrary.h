@@ -25,7 +25,7 @@ typedef struct _MESSAGE {
 						// 2 - установить значение
 	unsigned char	ParamID;		// идентификатор параметра
 	float		ParamValue;		// значение параметра
-	boolean		Status;			// статус 0 - ошибка, 1 - ок
+	bool		Status;			// статус 0 - ошибка, 1 - ок
 	char		Comment[COMMENTLEN];	// комментарий
 } Message;
 
