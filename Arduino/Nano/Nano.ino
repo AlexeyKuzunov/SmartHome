@@ -7,6 +7,7 @@
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
 
+#include <timer-api.h>
 #include <RF24_config.h>
 #include <RF24.h>
 #include <nRF24L01.h>
@@ -14,7 +15,7 @@
 #include "ASLibrary.h"
 
 
-#define DHTPIN 3     // what digital pin we're connected to
+#define DHTPIN 2     // what digital pin we're connected to
 
 // Uncomment whatever type you're using!
 //#define DHTTYPE DHT11   // DHT 11
@@ -53,13 +54,17 @@ const uint64_t pipes[2] = { 0xF0F0F0F0E1LL, 0xF0F0F0F0E2LL };
 void setup() {
 	Serial.begin(9600);
 	printf_begin();
-//	Serial.println("DHTxx test!");
+
+	// частота=1Гц, период=1с
+	timer_init_ISR_1Hz(TIMER_DEFAULT);
+
 	NRF24_Init();
 	dht.begin();
 }
 
 void loop() {
 	bool done = false;
+	getDHT();
 	if (radio.available()) {
 		//while (!done) {
 		// Упираемся и
@@ -74,7 +79,7 @@ void loop() {
 	//	Serial.println(Sensor.Id);
 	}
 	
-	
+/*	
 	// Wait a few seconds between measurements.
 	delay(2000);
 
@@ -110,7 +115,7 @@ void loop() {
 	Serial.print(" *C ");
 	Serial.print(hif);
 	Serial.println(" *F");
-
+*/
 }
 
 void NRF24_Init() {
@@ -163,27 +168,52 @@ void doCommand(unsigned char From, unsigned char Command, unsigned char ParamID,
 		break;
 	}
 	// ответим "командующему"
-	sendSlaveMessage(From, ParamID);
+	//sendSlaveMessage(From, ParamID);
 
 	return;
 }
 
 void sendSlaveMessage(unsigned char From, unsigned char ParamID) {
-	AS_Answer Answer;
 	switch (ParamID)
 	{
+		radio.stopListening();
 	case 1:
 		//Давление
-
+		radio.write(&MySensors[1], sizeof(MySensors[1]));
 		break;
 	case 2:
-
+		//Температура
+		radio.write(&MySensors[2], sizeof(MySensors[2]));
 		break;
 	default:
 		break;
 	}
+	//Отправляем значение параметра запросившему
+	radio.startListening();
 }
 
 void setValue(unsigned char From, unsigned char ParamID, float ParamValue, char* Comment) {
 
+}
+
+void getDHT(void) {
+	Serial.println("goodbye from timer");
+	MySensors[1].Status = 0;
+	MySensors[1].Value = dht.readHumidity();
+	if (isnan(MySensors[1].Value)) {
+		MySensors[1].Status = 1;
+		Serial.println("Failed to read from DHT sensor!");
+	}
+
+	//MySensors[1].Comment = "C":
+	MySensors[2].Status = 0;
+	MySensors[2].Value = dht.readTemperature();
+	if (isnan(MySensors[2].Value)) {
+		MySensors[2].Status = 1;
+		Serial.println("Failed to read from DHT sensor!");
+	}
+}
+
+void timer_handle_interrupts(int timer) {
+	getDHT();
 }
