@@ -5,6 +5,7 @@
 #include <cstdlib>
 
 #define ce_gpio 5 //ce пин описан в script.fex как 5 пин gpio
+#define SID 0 //идентификатор модуля
 
 const uint64_t pipes[2] = {0xF0F0F0F0E1LL,0xF0F0F0F0E2LL};
 
@@ -22,7 +23,7 @@ void init_nrf(void)
 //	radio.enableAckPayload(); //Разрешение отправки нетипового ответа передатчику
 	radio.enableDynamicPayloads();
 	radio.setAutoAck(RF24_AUTOACK); //Установка режима подтверждения приема
-	radio.setRetries(15, 15); //Установка интервала и количества попыток "дозвона" до приемника
+	radio.setRetries(5, 15); //Установка интервала и количества попыток "дозвона" до приемника
 	radio.setDataRate(RF24_DATARATE); //Установка минимальной скорости
 	radio.setPALevel(RF24_PA_LEVEL); //Установка максимальной мощности
 	radio.setChannel(RF24_CHANNEL); //Установка канала вещания
@@ -40,46 +41,50 @@ void init_nrf(void)
 	radio.printDetails();
 }
 
-bool set_command(AS_Command SetCommand) //отправляем команду на клиент
+bool set_command(Message SetSensor) //отправляем команду на клиент
 {
 	radio.stopListening();
-	return(radio.write(&SetCommand, sizeof(SetCommand)));
+	return(radio.write(&SetSensor, sizeof(SetSensor)));
 }
 
-bool get_answer(AS_Answer GetAnswer) //принимаем данные с клиента
+bool get_answer(SensorParam MySensor) //принимаем данные с клиента
 {
 	long started_time = __millis();
 	bool timeout = false;
+	bool ok = false;
 	radio.startListening();
-	while (!radio.available() && !timeout)
+	
+	while (!radio.available() && !timeout) 
 		if (__millis() - started_time > 500) timeout = true;
-	if (timeout) printf("Failed, response timed out.\n\r");
+	if (timeout) 
+		printf("Failed, response timed out.\n\r");
 	else
-	{
-		radio.read(&GetAnswer, sizeof(GetAnswer));
-	}
-
+		{
+		bool ok = radio.read(&MySensor, sizeof(MySensor));		
+		}
+	return ok;	
 }
 
 int main(int argc, char** argv)
 {
-	AS_Command MyCommand;
-	AS_Answer MyAnswer ;
+	Message setCommand;
 
-	MyCommand.Id = 1;
-	MyCommand.Command = 4;
-	MyCommand.Parametr = 0;
+	SensorParam Sensor;
+
+	setCommand.Id = SID; //SID модуля отправляющего команду
+	setCommand.CommandTo = 1; //SID модуля которому отправляем команду
+	setCommand.Command = 1; //Получаем значение
+	setCommand.ParamID = 2; //получим значение температуры
+
 
 	init_nrf();
-	if (set_command(MyCommand)) printf("Packet sending ++++++\n\r");
-	else printf("Packet NOT sending -------------\n\r");
-
-	/*
-	if (set_command(MyCommand)) 
-	{
-		get_answer(MyAnswer);
-		printf("[%d]/\n", MyAnswer.Value);
+	
+	if (set_command(setCommand)) {
+		printf("Packet sending ++++++\n\r");
+		if (get_answer(Sensor))
+		printf("%f\n", Sensor.Value);
+		else printf("Error read\n\r");
 	}
-	*/
+	else printf("Packet NOT sending -------------\n\r");
 	return 0;
 }

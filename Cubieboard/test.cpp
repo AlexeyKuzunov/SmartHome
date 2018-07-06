@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include "ASLibrary.h"
 
-RF24 radio(5, "/dev/spidev0.0");
+RF24 radio(2, "/dev/spidev0.0");
 const uint64_t pipes[2] = {0xF0F0F0F0E1LL, 0xF0F0F0F0E2LL};
 
 void setup(void)
@@ -16,7 +16,7 @@ void setup(void)
   // Разрешение отправки нетипового ответа передатчику;
   //radio.enableAckPayload();
   // enable dynamic payloads
-  radio.enableDynamicPayloads();
+  //radio.enableDynamicPayloads();
   // optionally, increase the delay between retries & # of retries
   //radio.setRetries(15, 15);
   radio.setDataRate(RF24_DATARATE);
@@ -30,14 +30,14 @@ void setup(void)
   // Start listening
   //radio.startListening();
   // Dump the configuration of the rf unit for debugging
- // radio.printDetails();
+  radio.printDetails();
+  radio.stopListening();
 }
 
 void loop(void)
 {
   static char send_payload[] = "HELLO";
-  radio.stopListening();
-  radio.write(send_payload, sizeof(send_payload));
+  if (radio.write(send_payload, sizeof(send_payload))) printf("Write line.\n\r");
 }
 
 int main(int argc, char** argv)

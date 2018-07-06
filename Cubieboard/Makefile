@@ -27,10 +27,14 @@ server:
 test:
 	g++ test.cpp -g -I../src/ -L${LIBDIR} -lrf24-sun7i -o test -Wno-write-strings
 
+mqtt:
+	g++ test_mqtt.cpp -g -I../src/ -L${LIBDIR} -lrf24-sun7i -lmosquitto -o mqtt -Wno-write-strings
 
 clean:
 	rm -rf ${OBJDIR}*.o ${PREFIX}${LIBDIR}${LIBNAME} ${LIBDIR}${LIBNAME}
 
+pingtest:
+	g++ pingtest.cpp  -g -I../src/ -L${LIBDIR} -lrf24-sun7i -o pingtest
 
 
 install:
