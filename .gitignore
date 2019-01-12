@@ -8,3 +8,8 @@
 /Arduino/.vs/Nano/v15/*
 /Arduino/Nano/Debug/*
 /Arduino/Nano/__vm/*
+/lib/*
+/obj/*
+*.o
+*.d
+/MiniRBoard/.piolibdeps/*

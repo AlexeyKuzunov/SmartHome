@@ -1,0 +1,1 @@
+/home/alex/SmartHome/Cubieboard/Readme.txt
