@@ -20,20 +20,18 @@ RF24SN rf24sn( &radio, RF24SN_SERVER_ADDR, RF24SN_NODE_ID);
 Relay light(4, false); // constructor receives (pin, isNormallyOpen) true = Normally Open, false = Normally Closed
 OneWire  ds(3);  // on pin 10 (a 4.7K resistor is necessary)
 
-//int btnPin = 0;		//пин с кнопкой
-bool sw;				//хранит значение реле
+bool sw = 1;				//хранит значение реле
 
-Thread ReqThread = Thread();
 Thread TempPubThread = Thread();
-Thread RelayPubThread = Thread();
-//Thread BtnThread = Thread();
+Thread SwitchThread = Thread();
 
-int GetKeyValue();
+
+bool GetKeyValue();
 float convert(byte data[12], byte type_s);
 float ReadTemp();
 void TempPublish(void);
-void RelayPublish(void);
-void Request(void);
+void Switch(void);
+bool Request(void);
 void BtnClick(void);
 //void check_radio(void);
 long publishTimer, requestTimer;
@@ -44,60 +42,45 @@ long publishTimer, requestTimer;
 void setup(void){
 	Serial.begin(57600);
 	Serial.println();
-	printf_begin(); //необходима для отображения информации через PrintDetails 
-	pinMode(BTN_PIN, INPUT);
-	//radio.begin();
-	//radio.setAutoAck(false);
-	//radio.startListening();
-	rf24sn.begin();
-//	delay(4000);
-//	radio.stopListening();
-	rf24sn.printDetails();
-//	radio.printDetails();  	// Вот эта строка напечатает нам что-то, если все правильно соединили.
-//	radio.stopListening();
-	light.begin(); //Настройка реле
 
-	Request();
-//	ReqThread.onRun(Request);
-//	ReqThread.setInterval(1000);
+	pinMode(BTN_PIN, INPUT);
+
+	//Настройка радио
+	printf_begin(); //необходима для отображения информации через PrintDetails 
+	//	radio.setAutoAck(false);
+	rf24sn.begin();
+	//	rf24sn.printDetails();
+	//	radio.stopListening();
+
+	light.begin(); //Настройка реле
 
 	TempPubThread.onRun(TempPublish);
 	TempPubThread.setInterval(5000);
 
-	RelayPubThread.onRun(RelayPublish);
-	RelayPubThread.setInterval(1000);
-
-//	BtnThread.onRun(BtnClick);
-//	BtnThread.setInterval(100);
-
-//	if (ReqThread.shouldRun())
-//	ReqThread.run();
-
+	SwitchThread.onRun(Switch);
+	SwitchThread.setInterval(1000);
 }
-
 
 void loop(void) {
-//if (ReqThread.shouldRun())
-//	ReqThread.run();
-if (TempPubThread.shouldRun())
-	TempPubThread.run();
-//if (BtnThread.shouldRun())
-//	BtnThread.run();
-BtnClick();
-	Request();
-	if (sw) {
-		light.turnOn(); //Включаеим реле
-	} else {
-		light.turnOff(); //Выключаем реле
-	}
-if (RelayPubThread.shouldRun())
-	RelayPubThread.run();
+	if (TempPubThread.shouldRun())
+		TempPubThread.run();
+	if (SwitchThread.shouldRun())
+		SwitchThread.run();
 }
 
-int GetKeyValue() { // Функция устраняющая дребезг 
-	static int oldKeyValue; // Переменная для хранения предыдущего значения состояния кнопок
+void Switch(void) {
+
+if (GetKeyValue() == 0) {
+	sw = !sw;
+	Serial.println(sw);
+}
+
+}
+
+bool GetKeyValue() { // Функция устраняющая дребезг 
+	static bool oldKeyValue; // Переменная для хранения предыдущего значения состояния кнопок
 	static long lastChange; // Переменная для хранения времени последнего изменения состояния 
-	int actualKeyValue = analogRead(BTN_PIN); // Получаем актуальное состояние 
+	bool actualKeyValue = digitalRead(BTN_PIN); // Получаем актуальное состояние 
 	if ((actualKeyValue != oldKeyValue) && (millis() - lastChange > 200)) { // Пришло новое значение, и с последнего изменения прошло достаточно времени 
 		oldKeyValue = actualKeyValue; // Запоминаем новое значение 
 		lastChange = millis(); // Обнуляем таймер 
@@ -105,52 +88,50 @@ int GetKeyValue() { // Функция устраняющая дребезг
 	return oldKeyValue; // Отправляем старое, либо уже модифицированное новое значение
 }
 
-//запрос последнего значения темы RF24SN/out/
-void Request(void) {
+//запрос последнего значения темы RF24SN
+bool Request(void) {
 	
 	float relay;
 	
 	bool requestSuccess = rf24sn.request(RELAY_SENSOR, &relay);
 	if (requestSuccess) {
-		Serial.print("Got response. From now on, I'll be adding ");
-		Serial.println(relay);
-		if (relay) {
-			//light.turnOn(); //Включаеим реле
-			sw = 1;
-		} else {
-			//light.turnOff(); //Выключаем реле
-			sw = 0;
-		}
+		//Serial.print("Got response. From now on, I'll be adding ");
+		//Serial.println(relay);
+		return relay;
 	} else {
-//		Serial.println("Request failed");
+		Serial.println("Request failed");
 	}
 }
 
 void BtnClick(void){
-	bool a = analogRead(BTN_PIN);
-
-	//Serial.println(a);
+	//bool a = analogRead(BTN_PIN);
+	bool a = digitalRead(BTN_PIN);
+	Serial.println(a);
 
 
 	if(a == 0){
 		//delay (50);
-		sw =  !sw;}
+		sw =  0;
 		//light.turnOn(); //Включаеим реле
-//	} else {
-//			sw = 1;
+	} else {
+			sw = 1;
 		//light.turnOff(); //Включаеим реле
-//	}
+	}
 
 }
 
 void TempPublish(void) {
 
+rf24sn.publish(TEMP_SENSOR, ReadTemp());
+
+/*
 	bool TempPublishSuccess = rf24sn.publish(TEMP_SENSOR, ReadTemp());
 	if (TempPublishSuccess) {
 		Serial.println("Publish Temperature OK");
 	} else {
 		Serial.println("Publish Temperature failed");
 	}
+*/
 }
 
 void RelayPublish(void) {

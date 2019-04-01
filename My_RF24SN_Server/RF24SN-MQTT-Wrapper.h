@@ -16,7 +16,7 @@ void mqttPublish(int nodeId, int sensorId, float value);
 void mqttPublishSw(int nodeId, int sensorId, float value);
 
 float mqttRequest(int nodeId, int sensorId);
-std::string mqttTopic(int nodeId, int sensorId, bool in);
+std::string mqttTopic(int nodeId, int sensorId);
 void mqttLoop(void);
 
 #endif

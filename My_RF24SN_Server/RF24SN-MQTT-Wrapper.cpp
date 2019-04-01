@@ -42,7 +42,7 @@ void mqttSetup(void)
 
 void mqttPublish(int nodeId, int sensorId, float value)
 {
-    string topic = mqttTopic(nodeId, sensorId, true);
+    string topic = mqttTopic(nodeId, sensorId);
 	
 	std::stringbuf payload;      
   	std::ostream ps (&payload);  
@@ -57,49 +57,37 @@ void mqttPublish(int nodeId, int sensorId, float value)
 	
 }
 
-void mqttPublishSw(int nodeId, int sensorId, float value)
-{
-    for(int i=0;i=1;i++) {
-	string topic = mqttTopic(nodeId, sensorId, i);
-	
-	std::stringbuf payload;      
-  	std::ostream ps (&payload);  
-	ps << value;
-	
-	int ret = mosquitto_publish(mqtt, NULL, topic.c_str(), payload.str().size(), payload.str().c_str(), 0, false);
-	if(ret)
-		{
-	  		cerr << "Can`t publish Mozquitto server\n" << endl;
-		}
-
-	}
-}
-
-
 float mqttRequest(int nodeId, int sensorId)
 {
-    string topic = mqttTopic(nodeId, sensorId, false);
+    string topic = mqttTopic(nodeId, sensorId);
 	return messageStore[topic];
 }
 
+/**
+* Формирует сообщение для Mosquitto вида "RF24SN/in/1/1"
+*
+* nodeId - номер модуля
+*
+*sensorId - номер сенсора
+*
+*/
 
-string mqttTopic(int nodeId, int sensorId, bool in)
-{
-	
+string mqttTopic(int nodeId, int sensorId){
 	std::stringbuf topic;      
   	std::ostream ts (&topic);  
-	ts << "RF24SN/" << (in?"in":"out") << "/" << nodeId << "/" << sensorId;
+
+	//при необходимости разграничения приема и передачи
+	//тогда в значения функции добавить bool in
+	//ts << "RF24SN/" << (in?"in":"out") << "/" << nodeId << "/" << sensorId;
+
+	ts << "RF24SN/" << nodeId << "/" << sensorId;
 	//cout << "ts: " << topic.str() << "\n";
 	return topic.str();
-	
 }
 
 
-void mqttLoop(void)
-{
-
+void mqttLoop(void){
     mosquitto_loop(	mqtt, 50, 42 /* the answer to life universe and everything */ );
-
 }
 	
 
